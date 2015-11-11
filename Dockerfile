@@ -1,5 +1,6 @@
-FROM alpine:3.2
-RUN apk add --update curl jq && rm -rf /var/cache/apk/*
+FROM nordstrom/util:2015-10-06
+
 COPY apply-labels.sh /
+
 ENTRYPOINT [ "/apply-labels.sh" ]
 CMD [ "" ]
