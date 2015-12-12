@@ -14,6 +14,7 @@ spec:
   containers:
     - name: apply-labels
       image: elevy/aws-node-labels:latest
+      imagePullPolicy: Always
       securityContext:
         privileged: true
       volumeMounts:
