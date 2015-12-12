@@ -1,4 +1,4 @@
-FROM nordstrom/util:2015-12-08
+FROM nordstrom/util
 
 RUN pip install awscli==1.9.11
 
