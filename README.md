@@ -1,6 +1,6 @@
 A small Alpine based container that fetched AWS metadata for the instance it
 executes on and applies it as node labels in Kubernetes.  Ideally used by
-dropping into the `/etc/kubernetes/manifets` directory a pod spec like:
+dropping into the `/etc/kubernetes/manifests` directory a pod spec like:
 
 ```
 apiVersion: v1
