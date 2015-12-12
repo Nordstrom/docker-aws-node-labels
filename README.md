@@ -13,7 +13,7 @@ spec:
   restartPolicy: OnFailure
   containers:
     - name: apply-labels
-      image: elevy/aws-node-labels:latest
+      image: nordstrom/aws-node-labels:latest
       imagePullPolicy: Always
       securityContext:
         privileged: true
