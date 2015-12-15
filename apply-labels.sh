@@ -27,7 +27,7 @@ INSTANCE_DETAILS=`aws --region "$AWS_REGION" ec2 describe-instances --instance-i
 SUBNET_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].NetworkInterfaces[].SubnetId'`
 INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Arn'`
 INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
-TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws/tags/\(.Key)\":\"\(.Value)\"") | join(",")'`
+# TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws/tags/\(.Key)\":\"\(.Value)\"") | join(",")'`
 
 curl  -s \
       --cert   /etc/kubernetes/ssl/worker.pem \
@@ -46,8 +46,7 @@ curl  -s \
       "aws/instance/type":        "${INSTANCE_TYPE}",
       "aws/subnet/id":            "${SUBNET_ID}",
       "aws/instance_profile/arn": "${INSTANCE_PROFILE_ARN}",
-      "aws/instance_profile/id":  "${INSTANCE_PROFILE_ID}",
-      "$TAGS_LABELS"
+      "aws/instance_profile/id":  "${INSTANCE_PROFILE_ID}"
     },
     "annotations": {
       "aws.node.kubernetes.io/sgs":  "${SECURITY_GROUPS}"
