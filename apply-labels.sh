@@ -31,14 +31,7 @@ INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[
 INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
 # TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws/tags/\(.Key)\":\"\(.Value)\"") | join(",")'`
 
-curl  -s \
-      --cert   /etc/kubernetes/ssl/worker.pem \
-      --key    /etc/kubernetes/ssl/worker-key.pem \
-      --cacert /etc/kubernetes/ssl/ca.pem  \
-      --request PATCH \
-      -H "Content-Type: application/strategic-merge-patch+json" \
-      -d @- \
-      https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE} <<EOF
+cat >> labels.json <<EOF
 {
   "metadata": {
     "labels": {
@@ -56,3 +49,12 @@ curl  -s \
   } 
 }
 EOF
+
+curl  -s \
+      --cert   /etc/kubernetes/ssl/worker.pem \
+      --key    /etc/kubernetes/ssl/worker-key.pem \
+      --cacert /etc/kubernetes/ssl/ca.pem  \
+      --request PATCH \
+      -H "Content-Type: application/strategic-merge-patch+json" \
+      -d @labels.json \
+      https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE}
