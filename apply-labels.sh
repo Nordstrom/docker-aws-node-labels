@@ -29,17 +29,24 @@ INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[
 INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
 # TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws/tags/\(.Key)\":\"\(.Value)\"") | join(",")'`
 
-cat >> labels.json <<EOF
+curl  -s \
+      --cert   /etc/kubernetes/ssl/worker.pem \
+      --key    /etc/kubernetes/ssl/worker-key.pem \
+      --cacert /etc/kubernetes/ssl/ca.pem  \
+      --request PATCH \
+      -H "Content-Type: application/strategic-merge-patch+json" \
+      -d @- \
+      https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE} <<EOF
 {
   "metadata": {
     "labels": {
-      "aws/region":               "${AVAILABILITY_ZONE}",
-      "aws/az":                   "${AVAILABILITY_ZONE}",
-      "aws/instance/id":          "${INSTANCE_ID}",
-      "aws/instance/type":        "${INSTANCE_TYPE}",
-      "aws/subnet/id":            "${SUBNET_ID}",
-      "aws/instance_profile/arn": "${INSTANCE_PROFILE_ARN}",
-      "aws/instance_profile/id":  "${INSTANCE_PROFILE_ID}"
+      "aws.amazon.com/region":               "${AVAILABILITY_ZONE}",
+      "aws.amazon.com/az":                   "${AVAILABILITY_ZONE}",
+      "aws.amazon.com/instance-id":          "${INSTANCE_ID}",
+      "aws.amazon.com/instance-type":        "${INSTANCE_TYPE}",
+      "aws.amazon.com/subnet-id":            "${SUBNET_ID}",
+      "aws.amazon.com/instance-profile-arn": "${INSTANCE_PROFILE_ARN}",
+      "aws.amazon.com/instance-profile-id":  "${INSTANCE_PROFILE_ID}"
     },
     "annotations": {
       "aws.node.kubernetes.io/sgs":  "${SECURITY_GROUPS}"
@@ -47,14 +54,3 @@ cat >> labels.json <<EOF
   } 
 }
 EOF
-
-cat labels.json
-
-curl -v -s \
-      --cert   /etc/kubernetes/ssl/worker.pem \
-      --key    /etc/kubernetes/ssl/worker-key.pem \
-      --cacert /etc/kubernetes/ssl/ca.pem  \
-      --request PATCH \
-      -H "Content-Type: application/strategic-merge-patch+json" \
-      -d @labels.json \
-      https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE}
