@@ -11,7 +11,7 @@ SECURITY_GROUPS=`${MD}/security-groups | tr '\n' ','`
 while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
   sleep 1
   HOSTNAME=`hostname`
-  echo "[$(date)] Hostname: $HOSTNAME"
+  echo "[$(date)] Hostname: $HOSTNAME" > /etc/kubernetes/ssl/labels.log
   NODE=`curl  -s -f \
         --cert   /etc/kubernetes/ssl/worker.pem \
         --key    /etc/kubernetes/ssl/worker-key.pem \
@@ -20,7 +20,7 @@ while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
   `
 done
 
-echo "[$(date)] Node: $NODE"
+echo "[$(date)] Node: $NODE" > /etc/kubernetes/ssl/labels.log
 
 INSTANCE_DETAILS=`aws --region "$AWS_REGION" ec2 describe-instances --instance-id "$INSTANCE_ID"`
 
@@ -29,7 +29,7 @@ INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[
 INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
 # TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws/tags/\(.Key)\":\"\(.Value)\"") | join(",")'`
 
-cat >> labels.json <<EOF
+cat > /labels.json <<EOF
 {
   "metadata": {
     "labels": {
@@ -48,7 +48,7 @@ cat >> labels.json <<EOF
 }
 EOF
 
-cat labels.json
+cat /labels.json > /etc/kubernetes/ssl/labels.log
 
 curl -v -s \
       --cert   /etc/kubernetes/ssl/worker.pem \
@@ -56,5 +56,5 @@ curl -v -s \
       --cacert /etc/kubernetes/ssl/ca.pem  \
       --request PATCH \
       -H "Content-Type: application/strategic-merge-patch+json" \
-      -d @labels.json \
+      -d @/labels.json \
       https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE}
