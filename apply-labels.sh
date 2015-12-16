@@ -52,7 +52,7 @@ EOF
 
 cat labels.json
 
-curl  -s \
+curl -v -s \
       --cert   /etc/kubernetes/ssl/worker.pem \
       --key    /etc/kubernetes/ssl/worker-key.pem \
       --cacert /etc/kubernetes/ssl/ca.pem  \
