@@ -25,9 +25,9 @@ echo "[$(date)] Node: $NODE"
 INSTANCE_DETAILS=`aws --region "$AWS_REGION" ec2 describe-instances --instance-id "$INSTANCE_ID"`
 
 SUBNET_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].NetworkInterfaces[].SubnetId'`
-# INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Arn'`
-# INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
-# TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws/tags/\(.Key)\":\"\(.Value)\"") | join(",")'`
+INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Arn'`
+INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
+TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws.amazon.com/tags-\(.Key)\"%\"\(.Value)\"") | join(",\n") | gsub(":";"-") | gsub("%";":")'`
 
 curl  -s \
       --cert   /etc/kubernetes/ssl/worker.pem \
@@ -44,7 +44,8 @@ curl  -s \
       "aws.amazon.com/az":                   "${AVAILABILITY_ZONE}",
       "aws.amazon.com/instance-id":          "${INSTANCE_ID}",
       "aws.amazon.com/instance-type":        "${INSTANCE_TYPE}",
-      "aws.amazon.com/subnet-id":            "${SUBNET_ID}"
+      "aws.amazon.com/subnet-id":            "${SUBNET_ID}",
+      ${TAGS_LABELS}
     },
     "annotations": {
       "aws.node.kubernetes.io/sgs":  "${SECURITY_GROUPS}"
