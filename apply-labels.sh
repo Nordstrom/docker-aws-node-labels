@@ -20,6 +20,8 @@ SECURITY_GROUPS=`${MD}/security-groups | tr '\n' ','`
 #   `
 # done
 
+NODE="ip-172-23-242-102.cloud.nordstrom.net"
+
 echo "[$(date)] Node: $NODE"
 
 INSTANCE_DETAILS=`aws --region "$AWS_REGION" ec2 describe-instances --instance-id "$INSTANCE_ID"`
@@ -29,20 +31,19 @@ INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[
 INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
 # TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws/tags/\(.Key)\":\"\(.Value)\"") | join(",")'`
 
-# curl  -s \
-#       --cert   /etc/kubernetes/ssl/worker.pem \
-#       --key    /etc/kubernetes/ssl/worker-key.pem \
-#       --cacert /etc/kubernetes/ssl/ca.pem  \
-#       --request PATCH \
-#       -H "Content-Type: application/strategic-merge-patch+json" \
-#       -d @- \
-#       https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE} <<EOF
-cat <<EOF
+curl  -s \
+      --cert   /etc/kubernetes/ssl/worker.pem \
+      --key    /etc/kubernetes/ssl/worker-key.pem \
+      --cacert /etc/kubernetes/ssl/ca.pem  \
+      --request PATCH \
+      -H "Content-Type: application/strategic-merge-patch+json" \
+      -d @- \
+      https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE} <<EOF
 {
   "metadata": {
     "labels": {
-      "aws/region":               "${AVAILABILITY_ZONE}"
-      "aws/az":                   "${AVAILABILITY_ZONE}"
+      "aws/region":               "${AVAILABILITY_ZONE}",
+      "aws/az":                   "${AVAILABILITY_ZONE}",
       "aws/instance/id":          "${INSTANCE_ID}",
       "aws/instance/type":        "${INSTANCE_TYPE}",
       "aws/subnet/id":            "${SUBNET_ID}",
