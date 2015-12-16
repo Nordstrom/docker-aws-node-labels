@@ -58,5 +58,3 @@ curl -v -s \
       -H "Content-Type: application/strategic-merge-patch+json" \
       -d @labels.json \
       https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE}
-
-vi
