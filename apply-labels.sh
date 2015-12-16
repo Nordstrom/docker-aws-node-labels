@@ -50,6 +50,8 @@ cat >> labels.json <<EOF
 }
 EOF
 
+cat labels.json
+
 curl  -s \
       --cert   /etc/kubernetes/ssl/worker.pem \
       --key    /etc/kubernetes/ssl/worker-key.pem \
