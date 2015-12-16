@@ -37,7 +37,7 @@ INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[]
 #       -H "Content-Type: application/strategic-merge-patch+json" \
 #       -d @- \
 #       https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE} <<EOF
-echo <<EOF
+cat <<EOF
 {
   "metadata": {
     "labels": {
