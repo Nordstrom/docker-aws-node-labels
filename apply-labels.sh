@@ -31,7 +31,7 @@ INSTANCE_DETAILS=`aws --region "$AWS_REGION" ec2 describe-instances --instance-i
 SUBNET_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].NetworkInterfaces[].SubnetId'`
 INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Arn'`
 INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
-TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws.amazon.com/tags-\(.Key)\"%\"\(.Value)\"") | join(",\n") | gsub(":";"-") | gsub("%";":")'`
+TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws.amazon.com/tags-\(.Key)\"%\"\(.Value)\"") | join(",\n")' | tr ":" "-" | tr "%" ":"`
 
 curl  -s \
       --cert   /etc/kubernetes/ssl/worker.pem \
