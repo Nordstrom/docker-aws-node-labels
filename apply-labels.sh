@@ -7,6 +7,9 @@ INSTANCE_ID=`${MD}/instance-id`
 INSTANCE_TYPE=`${MD}/instance-type`
 SECURITY_GROUPS=`${MD}/security-groups | tr '\n' ','`
 
+JQ_VERSION=`jq --version`
+echo $JQ_VERSION
+
 # It appears it takes a while for the hostname to incorporate the node name.
 while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
   sleep 1
