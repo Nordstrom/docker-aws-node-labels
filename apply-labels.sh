@@ -8,19 +8,17 @@ INSTANCE_TYPE=`${MD}/instance-type`
 SECURITY_GROUPS=`${MD}/security-groups | tr '\n' ','`
 
 # It appears it takes a while for the hostname to incorporate the node name.
-# while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
-#   sleep 1
-#   HOSTNAME=`hostname`
-#   echo "[$(date)] Hostname: $HOSTNAME"
-#   NODE=`curl  -s -f \
-#         --cert   /etc/kubernetes/ssl/worker.pem \
-#         --key    /etc/kubernetes/ssl/worker-key.pem \
-#         --cacert /etc/kubernetes/ssl/ca.pem  \
-#         https://${KUBERNETES_SERVICE_HOST}/api/v1/namespaces/kube-system/pods/${HOSTNAME} | jq -r '.spec.nodeName'
-#   `
-# done
-
-NODE="ip-172-23-242-102.cloud.nordstrom.net"
+while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
+  sleep 1
+  HOSTNAME=`hostname`
+  echo "[$(date)] Hostname: $HOSTNAME"
+  NODE=`curl  -s -f \
+        --cert   /etc/kubernetes/ssl/worker.pem \
+        --key    /etc/kubernetes/ssl/worker-key.pem \
+        --cacert /etc/kubernetes/ssl/ca.pem  \
+        https://${KUBERNETES_SERVICE_HOST}/api/v1/namespaces/kube-system/pods/${HOSTNAME} | jq -r '.spec.nodeName'
+  `
+done
 
 echo "[$(date)] Node: $NODE"
 
@@ -60,3 +58,5 @@ curl -v -s \
       -H "Content-Type: application/strategic-merge-patch+json" \
       -d @labels.json \
       https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE}
+
+read
