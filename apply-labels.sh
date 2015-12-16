@@ -40,8 +40,8 @@ curl  -s \
 {
   "metadata": {
     "labels": {
-      "aws/region":               "${AVAILABILITY_ZONE}"
-      "aws/az":                   "${AVAILABILITY_ZONE}"
+      "aws/region":               "${AVAILABILITY_ZONE}",
+      "aws/az":                   "${AVAILABILITY_ZONE}",
       "aws/instance/id":          "${INSTANCE_ID}",
       "aws/instance/type":        "${INSTANCE_TYPE}",
       "aws/subnet/id":            "${SUBNET_ID}",
