@@ -25,8 +25,8 @@ echo "[$(date)] Node: $NODE"
 INSTANCE_DETAILS=`aws --region "$AWS_REGION" ec2 describe-instances --instance-id "$INSTANCE_ID"`
 
 SUBNET_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].NetworkInterfaces[].SubnetId'`
-INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Arn'`
-INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
+# INSTANCE_PROFILE_ARN=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Arn'`
+# INSTANCE_PROFILE_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].IamInstanceProfile.Id'`
 # TAGS_LABELS=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].Tags | map("\"aws/tags/\(.Key)\":\"\(.Value)\"") | join(",")'`
 
 curl  -s \
@@ -44,9 +44,7 @@ curl  -s \
       "aws.amazon.com/az":                   "${AVAILABILITY_ZONE}",
       "aws.amazon.com/instance-id":          "${INSTANCE_ID}",
       "aws.amazon.com/instance-type":        "${INSTANCE_TYPE}",
-      "aws.amazon.com/subnet-id":            "${SUBNET_ID}",
-      "aws.amazon.com/instance-profile-arn": "${INSTANCE_PROFILE_ARN}",
-      "aws.amazon.com/instance-profile-id":  "${INSTANCE_PROFILE_ID}"
+      "aws.amazon.com/subnet-id":            "${SUBNET_ID}"
     },
     "annotations": {
       "aws.node.kubernetes.io/sgs":  "${SECURITY_GROUPS}"
