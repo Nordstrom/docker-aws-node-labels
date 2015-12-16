@@ -59,4 +59,4 @@ curl -v -s \
       -d @labels.json \
       https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE}
 
-read
+vi
