@@ -49,7 +49,6 @@ curl  -s \
       "aws.amazon.com/instance-id":          "${INSTANCE_ID}",
       "aws.amazon.com/instance-type":        "${INSTANCE_TYPE}",
       "aws.amazon.com/subnet-id":            "${SUBNET_ID}",
-      ${TAGS_LABELS}
     },
     "annotations": {
       "aws.node.kubernetes.io/sgs":  "${SECURITY_GROUPS}"
