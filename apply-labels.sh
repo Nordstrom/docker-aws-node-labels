@@ -48,7 +48,7 @@ curl  -s \
       "aws.amazon.com/az":                   "${AVAILABILITY_ZONE}",
       "aws.amazon.com/instance-id":          "${INSTANCE_ID}",
       "aws.amazon.com/instance-type":        "${INSTANCE_TYPE}",
-      "aws.amazon.com/subnet-id":            "${SUBNET_ID}",
+      "aws.amazon.com/subnet-id":            "${SUBNET_ID}"
     },
     "annotations": {
       "aws.node.kubernetes.io/sgs":  "${SECURITY_GROUPS}"
