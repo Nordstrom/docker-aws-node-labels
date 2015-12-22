@@ -1,11 +1,10 @@
 #!/bin/sh
 
-echo "[$(date)] parameters: $#"
-if [ "$#" -eq 0 ]; then
-  echo "[$(date)] $0 was called without parameters"
-  timeout 300s $0 notimeout
+if [ "$1" -eq "-t" ]; then
+  echo "[$(date)] $0 starting with timeout of $2"
+  timeout $2 $0 notimeout
 else
-  echo "[$(date)] $0 was called with $1 as a parameter"
+  echo "[$(date)] $0 started without timeout"
 
   MD="curl -s http://169.254.169.254/latest/meta-data/"
   AWS_REGION=`$MD/placement/availability-zone | head -c -1`
