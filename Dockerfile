@@ -4,4 +4,5 @@ RUN pip install awscli==1.9.11
 
 COPY apply-labels.sh /
 
-CMD ["/apply-labels.sh", "-t", "300s" ]
+ENTRYPOINT [ "/apply-labels.sh" ]
+CMD ["-t", "300s" ]
