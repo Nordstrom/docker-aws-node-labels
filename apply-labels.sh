@@ -1,7 +1,13 @@
 #!/bin/sh
 
 if [ "$1" = "-t" ]; then
+  # timeout after passed time and let the pod restart.
+  # There is a chicken and egg issue with running this on the
+  # api servers.  This forces the pod to die if this pod beats the
+  # api servers from coming up.  Second run succeeds.
+
   echo "[$(date)] $0 starting with timeout of $2"
+
   timeout $2 $0 notimeout
 else
   echo "[$(date)] $0 started without timeout"
