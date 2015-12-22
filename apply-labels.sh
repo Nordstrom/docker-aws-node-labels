@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$#" -eq 1 ]; then
+if [ "$#" -eq 0 ]; then
   timeout 300s $0 notimeout
 else
   MD="curl -s http://169.254.169.254/latest/meta-data/"
