@@ -1,6 +1,8 @@
 #!/bin/sh
 
-timeout 300s /bin/sh <<EOS
+timeout 10s /bin/sh <<EOS
+#!/bin/sh
+
 MD="curl -s http://169.254.169.254/latest/meta-data/"
 AWS_REGION=`$MD/placement/availability-zone | head -c -1`
 AVAILABILITY_ZONE=`$MD/placement/availability-zone`
