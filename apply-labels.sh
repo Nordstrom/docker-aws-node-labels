@@ -1,5 +1,6 @@
 #!/bin/sh
 
+echo "[$(date)] parameters: $#"
 if [ "$#" -eq 0 ]; then
   echo "[$(date)] $0 was called without parameters"
   timeout 300s $0 notimeout
