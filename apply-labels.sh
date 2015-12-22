@@ -1,5 +1,6 @@
 #!/bin/sh
 
+timeout 300s /bin/sh <<EOS
 MD="curl -s http://169.254.169.254/latest/meta-data/"
 AWS_REGION=`$MD/placement/availability-zone | head -c -1`
 AVAILABILITY_ZONE=`$MD/placement/availability-zone`
@@ -12,8 +13,6 @@ echo "[$(date)] jq-version: $JQ_VERSION"
 
 
 # It appears it takes a while for the hostname to incorporate the node name.
-TIMEOUT=300 # In seconds
-COUNTER=0
 while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
   HOSTNAME=`hostname`
   echo "[$(date)] Hostname: $HOSTNAME"
@@ -26,12 +25,6 @@ while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
   echo "[$(date)] Node: $NODE"
 
   sleep 1
-  COUNTER=$((COUNTER + 1))
-
-  if [ $COUNTER -ge $TIMEOUT ]; then
-    echo "[$(date)] Failed to get Node!"
-    exit 1
-  fi
 done
 
 echo "[$(date)] Node: $NODE"
@@ -66,3 +59,4 @@ curl  -s \
   } 
 }
 EOF
+EOS
