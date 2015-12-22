@@ -26,7 +26,7 @@ while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
   echo "[$(date)] Node: $NODE"
 
   sleep 1
-  COUNTER=$[COUNTER + 1]
+  COUNTER=$((COUNTER + 1))
 
   if [ $COUNTER -ge $TIMEOUT ]; then
     echo "[$(date)] Failed to get Node!"
