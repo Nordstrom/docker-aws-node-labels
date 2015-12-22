@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$1" -eq "-t" ]; then
+if [ "$1" = "-t" ]; then
   echo "[$(date)] $0 starting with timeout of $2"
   timeout $2 $0 notimeout
 else
