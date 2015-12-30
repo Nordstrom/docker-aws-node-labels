@@ -57,7 +57,7 @@ else
 {
   "metadata": {
     "labels": {
-      "aws.amazon.com/region":               "${AVAILABILITY_ZONE}",
+      "aws.amazon.com/region":               "${AWS_REGION}",
       "aws.amazon.com/az":                   "${AVAILABILITY_ZONE}",
       "aws.amazon.com/instance-id":          "${INSTANCE_ID}",
       "aws.amazon.com/instance-type":        "${INSTANCE_TYPE}",
