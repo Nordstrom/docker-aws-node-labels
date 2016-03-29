@@ -18,14 +18,16 @@ else
   JQ_VERSION=`jq --version`
   echo "[$(date)] jq-version: $JQ_VERSION"
 
+  # Works only as a kubernetes injected Pod
+  TOKEN=`cat /var/run/secrets/kubernetes.io/serviceaccount/token`
+
   # It appears it takes a while for the hostname to incorporate the node name.
   while [ "x$NODE" = "x" ] || [ "$NODE" = "null" ]; do
     HOSTNAME=`hostname`
     echo "[$(date)] Hostname: $HOSTNAME"
     NODE=`curl  -s -f \
-          --cert   /etc/kubernetes/ssl/worker.pem \
-          --key    /etc/kubernetes/ssl/worker-key.pem \
-          --cacert /etc/kubernetes/ssl/ca.pem  \
+          --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt  \
+          -H "Authorization: Bearer $TOKEN" \
           https://${KUBERNETES_SERVICE_HOST}/api/v1/namespaces/kube-system/pods/${HOSTNAME} | jq -r '.spec.nodeName'
     `
     echo "[$(date)] Node: $NODE"
@@ -40,10 +42,9 @@ else
   SUBNET_ID=`echo $INSTANCE_DETAILS | jq -r '.Reservations[].Instances[].NetworkInterfaces[].SubnetId'`
 
   curl  -s \
-        --cert   /etc/kubernetes/ssl/worker.pem \
-        --key    /etc/kubernetes/ssl/worker-key.pem \
-        --cacert /etc/kubernetes/ssl/ca.pem  \
+        --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt  \
         --request PATCH \
+        -H "Authorization: Bearer $TOKEN" \
         -H "Content-Type: application/strategic-merge-patch+json" \
         -d @- \
         https://${KUBERNETES_SERVICE_HOST}/api/v1/nodes/${NODE} <<EOF
